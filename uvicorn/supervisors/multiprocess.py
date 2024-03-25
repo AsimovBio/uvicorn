@@ -56,8 +56,11 @@ class Multiprocess:
             signal.signal(sig, self.signal_handler)
 
         for _idx in range(self.config.workers):
+            logger.debug(f"Getting subprocess {_idx}")
             process = get_subprocess(config=self.config, target=self.target, sockets=self.sockets)
+            logger.debug(f"Starting subprocess {_idx} [{process.pid}]")
             process.start()
+            logger.debug(f"Process started and now getting appended {_idx} [{process.pid}]")
             self.processes.append(process)
 
     def shutdown(self) -> None:

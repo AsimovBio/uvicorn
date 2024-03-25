@@ -61,22 +61,29 @@ class Server:
         self._captured_signals: list[int] = []
 
     def run(self, sockets: list[socket.socket] | None = None) -> None:
+        logger.debug("server.run()")
         self.config.setup_event_loop()
+        logger.debug("calling asyncio.run...")
         return asyncio.run(self.serve(sockets=sockets))
 
     async def serve(self, sockets: list[socket.socket] | None = None) -> None:
+        logger.debug("server.serve()")
         with self.capture_signals():
+            logger.debug("calling server._serve")
             await self._serve(sockets)
 
     async def _serve(self, sockets: list[socket.socket] | None = None) -> None:
+        logger.debug("server._serve()")
         process_id = os.getpid()
 
         config = self.config
         if not config.loaded:
+            logger.debug("loading config...")
             config.load()
+        logger.debug(f"config loaded: {config.loaded}")
 
         self.lifespan = config.lifespan_class(config)
-
+        logger.info("server.lifespan has been set")
         message = "Started server process [%d]"
         color_message = "Started server process [" + click.style("%d", fg="cyan") + "]"
         logger.info(message, process_id, extra={"color_message": color_message})
