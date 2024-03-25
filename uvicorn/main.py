@@ -559,9 +559,8 @@ def run(
         h11_max_incomplete_event_size=h11_max_incomplete_event_size,
     )
     server = Server(config=config)
-
+    logger = logging.getLogger("uvicorn.error")
     if (config.reload or config.workers > 1) and not isinstance(app, str):
-        logger = logging.getLogger("uvicorn.error")
         logger.warning("You must pass the application as an import string to enable 'reload' or " "'workers'.")
         sys.exit(1)
 
