@@ -570,7 +570,9 @@ def run(
         ChangeReload(config, target=server.run, sockets=[sock]).run()
     elif config.workers > 1:
         sock = config.bind_socket()
+        logger.debug("Starting multiprocess run...")
         Multiprocess(config, target=server.run, sockets=[sock]).run()
+        logger.debug("Done starting multiprocess run.")
     else:
         server.run()
     if config.uds and os.path.exists(config.uds):
